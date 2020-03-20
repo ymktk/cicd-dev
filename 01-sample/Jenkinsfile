@@ -1,0 +1,12 @@
+pipeline {
+  agent {
+    docker 'openjdk:11.0.6-slim'
+  }
+  stages() {
+    stage('build') {
+      steps() {
+        sh 'java -version'
+      }
+    }
+  }
+}
