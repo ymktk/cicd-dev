@@ -39,11 +39,8 @@ pipeline {
 
         sh 'env'
 
-        sh 'su ansible'
 
-        sh 'su env'
-
-        sh 'ansible --version'
+        sh '/home/ansible/.local/bin/ansible --version'
 
         // ansiblePlaybook(
         //   playbook:  '02-ansible/ansible-deploy/tests/test.yml',
