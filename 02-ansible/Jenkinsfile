@@ -4,8 +4,14 @@ log_path = ./ansible.log
 """
 
 pipeline {
+
+  // agent any
+
   agent {
-    docker 'ymktk/ansible:ansible-2.9.5-centos'
+    docker {
+      image 'ymktk/ansible:ansible-2.9.5-centos'
+      args '-v $HOME/.m2:/root/.m2'
+    }
   }
 
   stages() {
@@ -26,16 +32,13 @@ pipeline {
 
     stage('3. Executions') {
       steps() {
-        sh 'ls -lR'
+        sh 'hostname'
+        sh 'pwd'
+        sh 'id'
+        sh 'ls -l'
       }
-
-      // post {
-      //   always {
-      //     archiveArtifacts 'ansible.log'
-      //   }
-      // }
-
     }
+
   } // End Stages
 
   post {
