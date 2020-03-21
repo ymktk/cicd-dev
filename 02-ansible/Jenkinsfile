@@ -5,8 +5,6 @@ log_path = ./ansible.log
 
 pipeline {
 
-  // agent any
-
   agent {
     docker {
       image 'ymktk/ansible:ansible-2.9.5-centos'
@@ -25,8 +23,11 @@ pipeline {
     stage('2. check where I am') {
       steps() {
         sh 'hostname'
+
         sh 'pwd'
+
         sh 'id'
+
         sh 'ls -l'
       }
     }
@@ -36,18 +37,23 @@ pipeline {
       steps {
         sh 'hostname'
 
-        ansiblePlaybook(
-          playbook:  '02-ansible/ansible-deploy/tests/test.yml',
-          inventory: '02-ansible/ansible-deploy/tests/inventory.yml',
-          colorized: true
-        )
+        sh 'env'
+
+        sh 'ansible --version'
+
+        // ansiblePlaybook(
+        //   playbook:  '02-ansible/ansible-deploy/tests/test.yml',
+        //   inventory: '02-ansible/ansible-deploy/tests/inventory.yml',
+        //   colorized: true
+        // )
       }
 
-      post {
-        always {
-          archiveArtifacts 'ansible.log'
-        }
-      }
+      // post {
+      //   always {
+      //     archiveArtifacts 'ansible.log'
+      //   }
+      // }
+
     }
 
 
