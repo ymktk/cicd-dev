@@ -24,7 +24,7 @@ pipeline {
 
     stage('2. check where I am') {
       steps() {
-        echo "${hostname}"
+        sh 'hostname'
         sh 'pwd'
         sh 'id'
         sh 'ls -l'
@@ -34,7 +34,8 @@ pipeline {
     //https://plugins.jenkins.io/ansible/
     stage('run playbook') {
       steps {
-        echo "${hostname}"
+        sh 'hostname'
+
         ansiblePlaybook(
           playbook:  '02-ansible/ansible-deploy/tests/test.yml',
           inventory: '02-ansible/ansible-deploy/tests/inventory.yml',
