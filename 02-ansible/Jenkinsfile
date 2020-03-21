@@ -7,27 +7,18 @@ pipeline {
 
   agent {
     docker {
-      image 'ymktk/ansible:ansible-2.9.5-centos'
+      image 'ymktk/ansible:ansible-2.9.6-centos'
       args '-v $HOME/.m2:/root/.m2'
     }
   }
 
   stages() {
 
-    stage('1. Greeting') {
-      steps {
-        echo 'Hello world'
-      }
-    }
-
-    stage('2. check where I am') {
+    stage('Location info') {
       steps() {
         sh 'hostname'
-
         sh 'pwd'
-
         sh 'id'
-
         sh 'ls -l'
       }
     }
@@ -36,11 +27,8 @@ pipeline {
     stage('run playbook') {
       steps {
         sh 'hostname'
-
         sh 'env'
-
-
-        sh '/home/ansible/.local/bin/ansible --version'
+        sh 'ansible --version'
 
         // ansiblePlaybook(
         //   playbook:  '02-ansible/ansible-deploy/tests/test.yml',
