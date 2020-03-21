@@ -29,11 +29,11 @@ pipeline {
         sh 'ls -lR'
       }
 
-      post {
-        always {
-          archiveArtifacts 'ansible.log'
-        }
-      }
+      // post {
+      //   always {
+      //     archiveArtifacts 'ansible.log'
+      //   }
+      // }
 
     }
   } // End Stages
