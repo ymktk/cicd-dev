@@ -1,0 +1,11 @@
+---
+
+- name: get date info
+  vars:
+    now_date: "{{ lookup('pipe','date +%Y-%m%d-%H%M') }}"
+  file:
+    path: /root/{{ now_date }}
+    state: touch
+
+- name: ls -l /root/
+  command: ls -l
