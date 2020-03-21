@@ -1,22 +1,47 @@
+def ANSIBLE_CONFIG = """\
+[defaults]
+log_path = ./ansible.log
+"""
+
 pipeline {
   agent {
-    docker 'openjdk:11.0.6-slim'
+    docker 'ymktk/ansible:ansible-2.9.5-centos'
   }
 
   stages() {
 
-    stage('Stage 1') {
+    stage('1. Greeting') {
       steps {
-        echo 'Good morning'
+        echo 'Hello world'
       }
     }
 
-    stage('build') {
+    // stage('2. Get ansible files') {
+    //   steps {
+    //     deleteDir()
+    //     git 'git@github.com:ymktk/jenkins.git'
+    //     writeFile(file: "ansible.cfg", text: "${ANSIBLE_CONFIG}")
+    //   }
+    // }
+
+    stage('3. Executions') {
       steps() {
-        sh 'java -version'
+        sh 'ls -lR'
       }
+
+      post {
+        always {
+          archiveArtifacts 'ansible.log'
+        }
+      }
+
     }
+  } // End Stages
 
-
+  post {
+    success {
+      cleanWs()
+    }
   }
+
 }
