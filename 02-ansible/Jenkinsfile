@@ -22,15 +22,7 @@ pipeline {
       }
     }
 
-    // stage('2. Get ansible files') {
-    //   steps {
-    //     deleteDir()
-    //     git 'git@github.com:ymktk/jenkins.git'
-    //     writeFile(file: "ansible.cfg", text: "${ANSIBLE_CONFIG}")
-    //   }
-    // }
-
-    stage('3. Executions') {
+    stage('2. check where I am') {
       steps() {
         sh 'hostname'
         sh 'pwd'
@@ -38,6 +30,25 @@ pipeline {
         sh 'ls -l'
       }
     }
+
+    //https://plugins.jenkins.io/ansible/
+    stage('run playbook') {
+      steps {
+        echo "run ansible-playbook"
+        ansiblePlaybook(
+          playbook:  '02-ansible/ansible-deploy/tests/test.yml',
+          inventory: '02-ansible/ansible-deploy/tests/inventory.yml',
+          colorized: true
+        )
+      }
+
+      post {
+        always {
+          archiveArtifacts 'ansible.log'
+        }
+      }
+    }
+
 
   } // End Stages
 
