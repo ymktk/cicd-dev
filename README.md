@@ -5,7 +5,7 @@
 ### 1-1. Jenkins Master test machine blank image
 
 ```bash
-cd /path/to/docker-k8s/cicd-local-dev/jenkins-master/
+cd /path/to/cicd-dev/Dockerfiles/jenkins-master/
 DOCKER_BUILDKIT=1 docker build -t jenkins-master:base .
 
 ### Get private key of Jenkins
@@ -20,14 +20,14 @@ $ cat   $TMPDWL/jenkins-id_rsa
 ### 1-2. Ansible Controller
 
 ```bash
-cd /path/to/docker-k8s/cicd-local-dev/ansible_controller/centos7/
+cd /path/to/cicd-dev/Dockerfiles/ansible_controller/centos7/
 DOCKER_BUILDKIT=1 docker build -t ansible_controller .
 ```
 
 ### 1-3. Builder (OpenJDK11 + Gradle)
 
 ```bash
-cd /path/to/docker-k8s/cicd-local-dev/builder/gradle/
+cd /path/to/cicd-dev/Dockerfiles/builder/gradle/
 DOCKER_BUILDKIT=1 docker build -t builder_gradle .
 
 docker run -it --rm -v /c/Users/Public/repos:/home/jenkins/repos builder_gradle bash
@@ -37,7 +37,7 @@ docker run -it --rm -v /c/Users/Public/repos:/home/jenkins/repos builder_gradle 
 ## 2. Apply to local k8s cluster
 
 ```bash
-$ cd /path/to/docker-k8s/cicd-local-dev/k8s/
+$ cd /path/to/cicd-dev/k8s/
 
 $ kubectl apply -f  local-dev.yaml
 
@@ -70,20 +70,21 @@ $ kubectl exec -it $(kubectl get pods -l app=jenkins-pod -o jsonpath='{.items[*]
 ### FYI SSH access from external
 ###   jenkins-master-nodeport > nodePort
 # $ ssh -p 30022 root@host.docker.internal
-### password -> /path/to/docker-k8s/cicd-local-dev/jenkins-master/Dockerfile
+### password -> /path/to/cicd-dev/Dockerfiles/jenkins-master/Dockerfile
 
 ### FYI SSH access from WSL2 terminal
 # $ ssh -p 30022 root@localhost
 
 $ docker run -it --rm \
-          -v /c/Users/Public/Downloads:/tmp/downloads \
-          -v /c/Users/Public/repos:/home/ansible/repos \
-          ansible_controller:latest bash
+  -v /c/Users/Public/Downloads:/tmp/downloads \
+  -v /c/Users/Public/repos:/home/ansible/repos \
+  ansible_controller:latest bash
 
 ### Connection test
 $ cd ~/repos/ansible/roles/
 $ ssh -p 30022 -i /tmp/downloads/jenkins-id_rsa root@host.docker.internal
 $ ansible -i inventory jenkins -m ping -u root -vvv
+
 ```
 
 ### Setup Jenkins Master
@@ -142,4 +143,3 @@ e.g. password123
   + [Get a Shell to a Running Container](https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/)
 + ストレージ
   + [ストレージにボリュームを使用するPodを構成する](https://kubernetes.io/ja/docs/tasks/configure-pod-container/configure-volume-storage/)
-
