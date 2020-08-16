@@ -1,0 +1,60 @@
+def ANSIBLE_CONFIG = """\
+[defaults]
+remote_tmp = /tmp/ansible-$BUILD_ID
+local_tmp  = ./tmp-ansible/BUILD-$BUILD_ID
+log_path   = ./ansible.log
+"""
+
+pipeline {
+
+  agent {
+    docker {
+      image 'ymktk/ansible:ansible-2.9.6-centos'
+      args '-v $HOME/.m2:/root/.m2'
+    }
+  }
+
+  stages() {
+
+    stage('Location info') {
+      steps() {
+        writeFile(file: "ansible.cfg", text: "${ANSIBLE_CONFIG}")
+        sh 'hostname'
+        sh 'pwd'
+        sh 'id'
+        sh 'ls -l'
+      }
+    }
+
+    //https://plugins.jenkins.io/ansible/
+    stage('run playbook') {
+      steps {
+        sh 'hostname'
+        sh 'env'
+        sh 'ansible --version'
+
+        // ansiblePlaybook(
+        //   playbook:  '02-ansible/ansible-deploy/tests/test.yml',
+        //   inventory: '02-ansible/ansible-deploy/tests/inventory.yml',
+        //   colorized: true
+        // )
+      }
+
+      post {
+        always {
+          archiveArtifacts 'ansible.log'
+        }
+      }
+
+    }
+
+
+  } // End Stages
+
+  post {
+    success {
+      echo 'Success!'
+    }
+  }
+
+}
